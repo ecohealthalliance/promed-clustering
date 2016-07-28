@@ -16,6 +16,7 @@ def get_articles(disease):
   print('get articles', disease)
   articles = posts.find({ 
     'zoomLat': {'$ne': None}, 
+    'zoomLon': {'$ne': None}, 
     'subject.diseaseLabels':{'$not':{'$size': 0}}, 
     'subject.diseaseLabels': {'$in': [disease]}
     },
@@ -76,6 +77,7 @@ def cluster_data(df):
   clusters = pd.Series([coordinates[cluster_labels == n] for n in range(num_clusters)])
   # plot_results()
   print('Number of clusters: {}'.format(num_clusters))
+  print('Cluster data:', df)
   print('Cluster names', cluster_labels)
 
 if __name__ == '__main__':
