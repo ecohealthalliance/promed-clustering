@@ -14,7 +14,17 @@ posts = db.posts
 
 def get_articles(disease):
   print('get articles', disease)
-  articles = posts.find({'zoomLat': {'$ne': None}, 'subject.diseaseLabels':{'$not':{'$size': 0}}, 'subject.diseaseLabels': {'$in': [disease]}},{'subject.diseaseLabels':1,'zoomLat': 1, 'zoomLon': 1, 'sourceDate': 1, 'promedDate': 1}).limit(100)
+  articles = posts.find({ 
+    'zoomLat': {'$ne': None}, 
+    'subject.diseaseLabels':{'$not':{'$size': 0}}, 
+    'subject.diseaseLabels': {'$in': [disease]}
+    },
+    {'subject.diseaseLabels':1,
+    'zoomLat': 1, 
+    'zoomLon': 1, 
+    'sourceDate': 1, 
+    'promedDate': 1}
+  ).limit(100)
   articles = list(articles);
   for article in articles:
     try:
@@ -64,12 +74,14 @@ def cluster_data(df):
   cluster_labels = db.labels_
   num_clusters = len(set(cluster_labels)) - (1 if -1 in cluster_labels else 0)
   clusters = pd.Series([coordinates[cluster_labels == n] for n in range(num_clusters)])
-  plot_results()
+  # plot_results()
   print('Number of clusters: {}'.format(num_clusters))
   print('Cluster names', cluster_labels)
 
 if __name__ == '__main__':
+  # get a unique list of disease names
   diseaseList = get_disease_list()
+  # for each disease get a list of articles and cluster them
   for disease in diseaseList:
     articleList = list(get_articles(disease))
     print("{0} articles for {1}".format(len(articleList), disease))
